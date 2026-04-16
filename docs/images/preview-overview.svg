@@ -1,0 +1,26 @@
+<svg width="900" height="520" viewBox="0 0 900 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="520" rx="28" fill="#F7FEFD"/>
+  <rect x="36" y="32" width="828" height="456" rx="24" fill="#FFFFFF" stroke="#D7F4F0"/>
+  <text x="64" y="82" fill="#53696A" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Overview</text>
+  <text x="64" y="110" fill="#86A1A1" font-family="Arial, Helvetica, sans-serif" font-size="16">Search, inspect, and batch-close tabs from one place</text>
+  <rect x="64" y="138" width="250" height="42" rx="21" fill="#F1FCFB" stroke="#CFEFEB"/>
+  <text x="84" y="165" fill="#9AB0B0" font-family="Arial, Helvetica, sans-serif" font-size="15">Search title / URL / domain...</text>
+  <rect x="64" y="204" width="772" height="78" rx="18" fill="#FBFFFE" stroke="#E3F7F4"/>
+  <rect x="64" y="298" width="772" height="78" rx="18" fill="#FBFFFE" stroke="#E3F7F4"/>
+  <rect x="64" y="392" width="772" height="78" rx="18" fill="#FBFFFE" stroke="#E3F7F4"/>
+  <rect x="88" y="228" width="18" height="18" rx="4" fill="#E2F7F4"/>
+  <rect x="122" y="224" width="160" height="14" rx="7" fill="#78D7CF"/>
+  <rect x="122" y="246" width="250" height="10" rx="5" fill="#DDF6F3"/>
+  <rect x="660" y="224" width="76" height="22" rx="11" fill="#ECFBF9"/>
+  <rect x="748" y="224" width="72" height="22" rx="11" fill="#D8F5F1"/>
+  <rect x="88" y="322" width="18" height="18" rx="4" fill="#E2F7F4"/>
+  <rect x="122" y="318" width="140" height="14" rx="7" fill="#78D7CF"/>
+  <rect x="122" y="340" width="210" height="10" rx="5" fill="#DDF6F3"/>
+  <rect x="676" y="318" width="60" height="22" rx="11" fill="#ECFBF9"/>
+  <rect x="748" y="318" width="72" height="22" rx="11" fill="#D8F5F1"/>
+  <rect x="88" y="416" width="18" height="18" rx="4" fill="#E2F7F4"/>
+  <rect x="122" y="412" width="170" height="14" rx="7" fill="#78D7CF"/>
+  <rect x="122" y="434" width="240" height="10" rx="5" fill="#DDF6F3"/>
+  <rect x="632" y="412" width="104" height="22" rx="11" fill="#5FC9C0"/>
+  <rect x="748" y="412" width="72" height="22" rx="11" fill="#D8F5F1"/>
+</svg>

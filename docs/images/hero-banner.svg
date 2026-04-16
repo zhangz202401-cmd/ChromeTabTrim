@@ -1,0 +1,166 @@
+<svg width="1280" height="480" viewBox="0 0 1280 480" xmlns="http://www.w3.org/2000/svg" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="480" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#f4fdfb"/>
+      <stop offset="100%" stop-color="#e8f9f6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1280" height="480" rx="28" fill="url(#bg)"/>
+
+  <!-- Subtle decorative circles (behind content, no overlap) -->
+  <circle cx="1180" cy="80" r="160" fill="rgba(129,216,208,0.10)"/>
+  <circle cx="100" cy="420" r="120" fill="rgba(129,216,208,0.08)"/>
+
+  <!-- ── LEFT SIDE: text block (x: 80–620) ── -->
+
+  <!-- Badge -->
+  <rect x="80" y="60" width="160" height="28" rx="14" fill="rgba(95,201,192,0.15)"/>
+  <text x="160" y="79" font-size="12" font-weight="700" fill="#5fc9c0" text-anchor="middle" letter-spacing="1.5">CHROME EXTENSION</text>
+
+  <!-- Title -->
+  <text x="80" y="160" font-size="80" font-weight="800" fill="#2d4a4a" letter-spacing="-2">TabTrim</text>
+
+  <!-- Subtitle -->
+  <text x="80" y="210" font-size="22" fill="#5a7878">轻量级标签页管理插件 · 体积 &lt; 100 KB · 零依赖</text>
+
+  <!-- Divider -->
+  <line x1="80" y1="238" x2="560" y2="238" stroke="rgba(95,201,192,0.3)" stroke-width="1.5"/>
+
+  <!-- Feature list -->
+  <circle cx="92" cy="270" r="5" fill="#5fc9c0"/>
+  <text x="108" y="275" font-size="17" fill="#4a6868">URL 精准去重 &amp; 主站域名去重</text>
+
+  <circle cx="92" cy="308" r="5" fill="#5fc9c0"/>
+  <text x="108" y="313" font-size="17" fill="#4a6868">自动休眠 · 实时内存占用监控</text>
+
+  <circle cx="92" cy="346" r="5" fill="#5fc9c0"/>
+  <text x="108" y="351" font-size="17" fill="#4a6868">关闭历史记录 · 一键恢复标签页</text>
+
+  <circle cx="92" cy="384" r="5" fill="#5fc9c0"/>
+  <text x="108" y="389" font-size="17" fill="#4a6868">纯原生 JS · 无需构建 · 下载即用</text>
+
+  <!-- CTA buttons -->
+  <rect x="80" y="418" width="148" height="42" rx="21" fill="#5fc9c0"/>
+  <text x="154" y="444" font-size="15" font-weight="700" fill="white" text-anchor="middle">立即安装</text>
+
+  <rect x="244" y="418" width="120" height="42" rx="21" fill="rgba(95,201,192,0.12)" stroke="#5fc9c0" stroke-width="1.5"/>
+  <text x="304" y="444" font-size="15" font-weight="700" fill="#5fc9c0" text-anchor="middle">查看文档</text>
+
+  <!-- ── RIGHT SIDE: UI mockup (x: 680–1200) ── -->
+
+  <!-- Popup card -->
+  <rect x="680" y="40" width="240" height="340" rx="20" fill="white" stroke="#d7f4f0" stroke-width="1.5"/>
+
+  <!-- Popup header -->
+  <rect x="680" y="40" width="240" height="48" rx="20" fill="white"/>
+  <rect x="680" y="68" width="240" height="20" fill="white"/>
+  <circle cx="702" cy="64" r="8" fill="#5fc9c0"/>
+  <text x="718" y="69" font-size="13" font-weight="700" fill="#2d4a4a">TabTrim</text>
+  <rect x="790" y="54" width="116" height="20" rx="10" fill="rgba(95,201,192,0.12)"/>
+  <text x="848" y="68" font-size="11" font-weight="600" fill="#5fc9c0" text-anchor="middle">完整管理 →</text>
+
+  <!-- Stats row -->
+  <rect x="692" y="100" width="64" height="56" rx="12" fill="#f5f7fc"/>
+  <text x="724" y="128" font-size="22" font-weight="800" fill="#2d4a4a" text-anchor="middle">47</text>
+  <text x="724" y="146" font-size="10" fill="#999" text-anchor="middle">标签页</text>
+
+  <rect x="764" y="100" width="64" height="56" rx="12" fill="#fff5f5"/>
+  <text x="796" y="128" font-size="22" font-weight="800" fill="#e53e3e" text-anchor="middle">8</text>
+  <text x="796" y="146" font-size="10" fill="#999" text-anchor="middle">重复</text>
+
+  <rect x="836" y="100" width="64" height="56" rx="12" fill="#f0f6ff"/>
+  <text x="868" y="128" font-size="22" font-weight="800" fill="#4a90e2" text-anchor="middle">12</text>
+  <text x="868" y="146" font-size="10" fill="#999" text-anchor="middle">休眠</text>
+
+  <!-- Action button -->
+  <rect x="692" y="168" width="208" height="36" rx="18" fill="#5fc9c0"/>
+  <text x="796" y="191" font-size="13" font-weight="700" fill="white" text-anchor="middle">一键关闭重复标签页</text>
+
+  <!-- History label -->
+  <text x="692" y="224" font-size="10" font-weight="700" fill="#aaa" letter-spacing="1">最近关闭</text>
+
+  <!-- History items -->
+  <rect x="692" y="232" width="208" height="32" rx="8" fill="#fafafa"/>
+  <rect x="700" y="242" width="12" height="12" rx="3" fill="#4078c8"/>
+  <text x="720" y="252" font-size="11" fill="#444">GitHub · anthropics/claude</text>
+  <text x="888" y="252" font-size="10" fill="#5fc9c0" text-anchor="end">恢复</text>
+
+  <rect x="692" y="270" width="208" height="32" rx="8" fill="#fafafa"/>
+  <rect x="700" y="280" width="12" height="12" rx="3" fill="#e44d26"/>
+  <text x="720" y="290" font-size="11" fill="#444">Stack Overflow · async</text>
+  <text x="888" y="290" font-size="10" fill="#5fc9c0" text-anchor="end">恢复</text>
+
+  <rect x="692" y="308" width="208" height="32" rx="8" fill="#fafafa"/>
+  <rect x="700" y="318" width="12" height="12" rx="3" fill="#1da1f2"/>
+  <text x="720" y="328" font-size="11" fill="#444">Twitter / X · 首页</text>
+  <text x="888" y="328" font-size="10" fill="#5fc9c0" text-anchor="end">恢复</text>
+
+  <!-- Manager card -->
+  <rect x="940" y="60" width="300" height="360" rx="20" fill="white" stroke="#d7f4f0" stroke-width="1.5"/>
+
+  <!-- Manager header -->
+  <rect x="940" y="60" width="300" height="44" rx="20" fill="white"/>
+  <rect x="940" y="84" width="300" height="20" fill="white"/>
+  <text x="960" y="88" font-size="14" font-weight="800" fill="#2d4a4a">概览</text>
+  <text x="960" y="106" font-size="11" fill="#9cb0af">共 47 个 · 休眠 12 · JS堆 1.2 GB</text>
+
+  <!-- Tab rows -->
+  <line x1="940" y1="116" x2="1240" y2="116" stroke="#f0f4f4" stroke-width="1"/>
+
+  <rect x="956" y="124" width="12" height="12" rx="3" fill="#4078c8"/>
+  <text x="976" y="134" font-size="12" font-weight="600" fill="#2d4a4a">GitHub · Issues</text>
+  <rect x="1100" y="122" width="52" height="18" rx="9" fill="rgba(255,200,100,0.18)"/>
+  <text x="1126" y="135" font-size="10" font-weight="700" fill="#b07d20" text-anchor="middle">142 MB</text>
+  <text x="1230" y="134" font-size="11" fill="#d5a3a0" text-anchor="end">关闭</text>
+  <line x1="940" y1="148" x2="1240" y2="148" stroke="#f0f4f4" stroke-width="1"/>
+
+  <rect x="956" y="156" width="12" height="12" rx="3" fill="#e44d26"/>
+  <text x="976" y="166" font-size="12" font-weight="600" fill="#2d4a4a">Stack Overflow</text>
+  <rect x="1100" y="154" width="52" height="18" rx="9" fill="rgba(255,200,100,0.18)"/>
+  <text x="1126" y="167" font-size="10" font-weight="700" fill="#b07d20" text-anchor="middle">98 MB</text>
+  <text x="1230" y="166" font-size="11" fill="#d5a3a0" text-anchor="end">关闭</text>
+  <line x1="940" y1="180" x2="1240" y2="180" stroke="#f0f4f4" stroke-width="1"/>
+
+  <rect x="956" y="188" width="12" height="12" rx="3" fill="#1da1f2"/>
+  <text x="976" y="198" font-size="12" font-weight="500" fill="#aaa">Twitter / X</text>
+  <rect x="1100" y="186" width="52" height="18" rx="9" fill="rgba(74,144,226,0.1)"/>
+  <text x="1126" y="199" font-size="10" font-weight="700" fill="#4a90e2" text-anchor="middle">休眠中</text>
+  <text x="1230" y="198" font-size="11" fill="#d5a3a0" text-anchor="end">关闭</text>
+  <line x1="940" y1="212" x2="1240" y2="212" stroke="#f0f4f4" stroke-width="1"/>
+
+  <rect x="956" y="220" width="12" height="12" rx="3" fill="#764abc"/>
+  <text x="976" y="230" font-size="12" font-weight="600" fill="#2d4a4a">Redux Docs</text>
+  <rect x="1100" y="218" width="52" height="18" rx="9" fill="rgba(255,200,100,0.18)"/>
+  <text x="1126" y="231" font-size="10" font-weight="700" fill="#b07d20" text-anchor="middle">76 MB</text>
+  <text x="1230" y="230" font-size="11" fill="#d5a3a0" text-anchor="end">关闭</text>
+  <line x1="940" y1="244" x2="1240" y2="244" stroke="#f0f4f4" stroke-width="1"/>
+
+  <rect x="956" y="252" width="12" height="12" rx="3" fill="#24292e"/>
+  <text x="976" y="262" font-size="12" font-weight="600" fill="#2d4a4a">GitHub · Settings</text>
+  <rect x="1100" y="250" width="52" height="18" rx="9" fill="rgba(255,200,100,0.18)"/>
+  <text x="1126" y="263" font-size="10" font-weight="700" fill="#b07d20" text-anchor="middle">88 MB</text>
+  <text x="1230" y="262" font-size="11" fill="#d5a3a0" text-anchor="end">关闭</text>
+  <line x1="940" y1="276" x2="1240" y2="276" stroke="#f0f4f4" stroke-width="1"/>
+
+  <!-- Domain dedup panel -->
+  <rect x="940" y="284" width="300" height="120" rx="14" fill="#fffbf0" stroke="#f6e05e" stroke-width="1.5"/>
+  <text x="960" y="306" font-size="12" font-weight="700" fill="#744210">主站域名去重</text>
+  <text x="960" y="324" font-size="11" fill="#888">发现 3 个域名存在重复标签页</text>
+
+  <rect x="960" y="334" width="260" height="22" rx="8" fill="white"/>
+  <text x="970" y="349" font-size="11" font-weight="600" fill="#744210">github.com</text>
+  <text x="1080" y="349" font-size="11" fill="#888">3 个标签页</text>
+  <text x="1210" y="349" font-size="11" fill="#e53e3e" text-anchor="end">关闭 2 个</text>
+
+  <rect x="960" y="360" width="260" height="22" rx="8" fill="white"/>
+  <text x="970" y="375" font-size="11" font-weight="600" fill="#744210">notion.so</text>
+  <text x="1080" y="375" font-size="11" fill="#888">2 个标签页</text>
+  <text x="1210" y="375" font-size="11" fill="#e53e3e" text-anchor="end">关闭 1 个</text>
+
+  <!-- Bottom action bar -->
+  <rect x="940" y="408" width="300" height="12" fill="white"/>
+  <rect x="1060" y="396" width="160" height="32" rx="16" fill="#5fc9c0"/>
+  <text x="1140" y="417" font-size="12" font-weight="700" fill="white" text-anchor="middle">确认关闭所选</text>
+</svg>

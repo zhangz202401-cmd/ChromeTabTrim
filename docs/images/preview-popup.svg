@@ -1,0 +1,72 @@
+<svg width="320" height="420" viewBox="0 0 320 420" xmlns="http://www.w3.org/2000/svg" font-family="'SF Pro Display','PingFang SC',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fcfffe"/>
+      <stop offset="100%" stop-color="#f3fbfa"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#81d8d0" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="320" height="420" rx="18" fill="url(#bg)"/>
+  <circle cx="290" cy="30" r="80" fill="rgba(129,216,208,0.15)"/>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="320" height="56" rx="18" fill="white" opacity="0.9"/>
+  <rect x="0" y="38" width="320" height="18" fill="white" opacity="0.9"/>
+  <circle cx="24" cy="28" r="7" fill="#5fc9c0"/>
+  <text x="38" y="33" font-size="14" font-weight="700" fill="#1a1a2e">TabTrim</text>
+  <rect x="230" y="18" width="72" height="22" rx="11" fill="rgba(129,216,208,0.15)" stroke="#d0f0ed" stroke-width="1"/>
+  <text x="266" y="33" font-size="11" font-weight="600" fill="#5fc9c0" text-anchor="middle">完整管理</text>
+
+  <!-- Stats -->
+  <rect x="12" y="64" width="296" height="80" rx="16" fill="white" opacity="0.9" filter="url(#shadow)"/>
+  <!-- stat 1 -->
+  <rect x="20" y="72" width="88" height="64" rx="12" fill="#f5f7fc"/>
+  <text x="64" y="102" font-size="26" font-weight="800" fill="#1a1a2e" text-anchor="middle">47</text>
+  <text x="64" y="120" font-size="11" fill="#999" text-anchor="middle">标签页</text>
+  <!-- stat 2 -->
+  <rect x="116" y="72" width="88" height="64" rx="12" fill="#fff5f5"/>
+  <text x="160" y="102" font-size="26" font-weight="800" fill="#e53e3e" text-anchor="middle">8</text>
+  <text x="160" y="120" font-size="11" fill="#999" text-anchor="middle">重复</text>
+  <!-- stat 3 -->
+  <rect x="212" y="72" width="88" height="64" rx="12" fill="#f0f6ff"/>
+  <text x="256" y="102" font-size="26" font-weight="800" fill="#4A90E2" text-anchor="middle">12</text>
+  <text x="256" y="120" font-size="11" fill="#999" text-anchor="middle">已休眠</text>
+
+  <!-- Action button -->
+  <rect x="12" y="156" width="296" height="44" rx="14" fill="#5fc9c0"/>
+  <text x="160" y="183" font-size="13" font-weight="700" fill="white" text-anchor="middle">一键关闭重复标签页</text>
+
+  <!-- History section -->
+  <text x="20" y="220" font-size="10" font-weight="700" fill="#aaa" letter-spacing="1">最近关闭</text>
+
+  <!-- history items -->
+  <rect x="12" y="228" width="296" height="160" rx="14" fill="white" opacity="0.9"/>
+
+  <image x="22" y="242" width="14" height="14" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%234078c8'/%3E%3C/svg%3E"/>
+  <text x="44" y="253" font-size="12" fill="#333">GitHub · anthropics/claude-code</text>
+  <text x="278" y="253" font-size="11" fill="#5fc9c0" text-anchor="end">恢复</text>
+  <line x1="22" y1="264" x2="298" y2="264" stroke="#f4f5f8" stroke-width="1"/>
+
+  <image x="22" y="274" width="14" height="14" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23e44d26'/%3E%3C/svg%3E"/>
+  <text x="44" y="285" font-size="12" fill="#333">Stack Overflow · async/await</text>
+  <text x="278" y="285" font-size="11" fill="#5fc9c0" text-anchor="end">恢复</text>
+  <line x1="22" y1="296" x2="298" y2="296" stroke="#f4f5f8" stroke-width="1"/>
+
+  <image x="22" y="306" width="14" height="14" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231da1f2'/%3E%3C/svg%3E"/>
+  <text x="44" y="317" font-size="12" fill="#333">Twitter / X · 首页</text>
+  <text x="278" y="317" font-size="11" fill="#5fc9c0" text-anchor="end">恢复</text>
+  <line x1="22" y1="328" x2="298" y2="328" stroke="#f4f5f8" stroke-width="1"/>
+
+  <image x="22" y="338" width="14" height="14" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23ff6b35'/%3E%3C/svg%3E"/>
+  <text x="44" y="349" font-size="12" fill="#333">Hacker News · Show HN</text>
+  <text x="278" y="349" font-size="11" fill="#5fc9c0" text-anchor="end">恢复</text>
+  <line x1="22" y1="360" x2="298" y2="360" stroke="#f4f5f8" stroke-width="1"/>
+
+  <image x="22" y="370" width="14" height="14" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23764abc'/%3E%3C/svg%3E"/>
+  <text x="44" y="381" font-size="12" fill="#333">Redux Docs · Getting Started</text>
+  <text x="278" y="381" font-size="11" fill="#5fc9c0" text-anchor="end">恢复</text>
+</svg>

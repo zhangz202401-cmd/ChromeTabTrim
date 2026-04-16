@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "TabTrim",
+  "version": "1.0.0",
+  "description": "轻量级标签页管理：去重、休眠、历史恢复",
+  "permissions": ["tabs", "storage", "alarms", "tabGroups", "scripting"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/memory.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": "icons/icon.png"
+  },
+  "icons": {
+    "16": "icons/icon.png",
+    "48": "icons/icon.png",
+    "128": "icons/icon.png"
+  }
+}

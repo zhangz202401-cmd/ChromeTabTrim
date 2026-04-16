@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TabTrim</title>
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<div class="popup-shell">
+  <div class="popup-ambient"></div>
+  <header class="hero">
+    <div>
+      <span class="hero-kicker">Workspace Console</span>
+      <h1>TabTrim</h1>
+      <p>整理重复标签页，快速回到真正重要的窗口。</p>
+    </div>
+    <button class="manager-link" id="openManager">完整管理</button>
+  </header>
+
+  <section class="stats">
+    <div class="stat">
+      <span class="stat-num" id="totalCount">-</span>
+      <span class="stat-label">标签页</span>
+    </div>
+    <div class="stat accent">
+      <span class="stat-num" id="dupCount">-</span>
+      <span class="stat-label">重复</span>
+    </div>
+    <div class="stat muted">
+      <span class="stat-num" id="sleepCount">-</span>
+      <span class="stat-label">已休眠</span>
+    </div>
+  </section>
+
+  <section class="actions">
+    <button id="closeDups" class="primary-btn">一键关闭重复标签页</button>
+  </section>
+
+  <section class="history-section">
+    <div class="section-head">
+      <span>最近关闭</span>
+    </div>
+    <ul class="history-list" id="historyList"></ul>
+  </section>
+</div>
+<script src="popup.js"></script>
+</body>
+</html>
