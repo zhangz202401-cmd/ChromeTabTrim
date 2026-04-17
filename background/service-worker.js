@@ -164,23 +164,20 @@ async function injectMemoryScript(tabId) {
       target: { tabId },
       files: ['content/memory.js']
     });
-  } catch {}
+  } catch (e) {
+    console.warn('injectMemoryScript failed', tabId, e);
+  }
 }
 
-chrome.runtime.onInstalled.addListener(async () => {
+async function initialize() {
   await ensureAlarmAndStorage();
   await syncOpenTabsMetadata();
-  // 主动注入到所有已打开的标签页
   const tabs = await chrome.tabs.query({ url: ['http://*/*', 'https://*/*'] });
-  for (const tab of tabs) injectMemoryScript(tab.id);
-});
+  await Promise.allSettled(tabs.map(tab => injectMemoryScript(tab.id)));
+}
 
-chrome.runtime.onStartup.addListener(async () => {
-  await ensureAlarmAndStorage();
-  await syncOpenTabsMetadata();
-  const tabs = await chrome.tabs.query({ url: ['http://*/*', 'https://*/*'] });
-  for (const tab of tabs) injectMemoryScript(tab.id);
-});
+chrome.runtime.onInstalled.addListener(initialize);
+chrome.runtime.onStartup.addListener(initialize);
 
 chrome.alarms.onAlarm.addListener(async alarm => {
   const { settings, tabActivity } = await chrome.storage.local.get(['settings', 'tabActivity']);
@@ -200,7 +197,7 @@ chrome.alarms.onAlarm.addListener(async alarm => {
       const lastActive = activity?.lastActiveAt || tab.lastAccessed || 0;
       if (now - lastActive > threshold) {
         staleCount++;
-        chrome.tabs.discard(tab.id);
+        await chrome.tabs.discard(tab.id).catch(() => {});
       }
     }
 
@@ -232,11 +229,13 @@ chrome.tabs.onRemoved.addListener(async (tabId, { isWindowClosing }) => {
   const { tabActivity = {}, closedHistory = [] } = await chrome.storage.local.get(['tabActivity', 'closedHistory']);
   const activity = tabActivity[tabId];
   if (activity?.url && !activity.url.startsWith('chrome://')) {
+    let hostname = '';
+    try { hostname = new URL(activity.url).hostname; } catch {}
     closedHistory.unshift({
       url: activity.url,
       title: activity.title || '',
       closedAt: Date.now(),
-      favicon: `https://www.google.com/s2/favicons?domain=${new URL(activity.url).hostname}`
+      favicon: hostname ? `https://www.google.com/s2/favicons?domain=${hostname}` : ''
     });
     if (closedHistory.length > MAX_HISTORY) closedHistory.pop();
   }
@@ -245,6 +244,9 @@ chrome.tabs.onRemoved.addListener(async (tabId, { isWindowClosing }) => {
 });
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  // 只允许内容脚本发送 TAB_MEMORY，其他特权消息必须来自扩展页面
+  if (msg.type !== 'TAB_MEMORY' && sender.tab) return false;
+
   // content script 上报内存数据，fire-and-forget，不需要响应
   if (msg.type === 'TAB_MEMORY' && sender.tab?.id) {
     const tabId = sender.tab.id;
@@ -338,7 +340,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     }
 
     if (msg.type === 'RESTORE_TAB') {
-      await chrome.tabs.create({ url: msg.url });
+      const url = msg.url;
+      if (typeof url !== 'string' || !/^https?:\/\//.test(url)) {
+        sendResponse({ ok: false });
+        return;
+      }
+      await chrome.tabs.create({ url });
       sendResponse({ ok: true });
       return;
     }

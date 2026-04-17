@@ -3,10 +3,10 @@
   "name": "TabTrim",
   "version": "1.0.0",
   "description": "轻量级标签页管理：去重、休眠、历史恢复",
-  "permissions": ["tabs", "storage", "alarms", "tabGroups", "scripting"],
+  "permissions": ["tabs", "storage", "alarms", "scripting"],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["http://*/*", "https://*/*"],
       "js": ["content/memory.js"],
       "run_at": "document_idle"
     }
