@@ -600,17 +600,19 @@ async function loadSleep() {
 
   bindJumpLinks(list);
   list.querySelectorAll('[data-wake-tab]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      chrome.tabs.update(Number(btn.dataset.wakeTab), { active: true });
-      setTimeout(loadSleep, 500);
+    btn.addEventListener('click', async () => {
+      await chrome.tabs.update(Number(btn.dataset.wakeTab), { active: true });
+      await new Promise(r => setTimeout(r, 100));
+      await loadSleep();
     });
   });
 }
 
 document.getElementById('wakeAll').addEventListener('click', async () => {
   const tabs = await send('GET_ALL_TABS');
-  for (const tab of tabs.filter(item => item.discarded)) chrome.tabs.reload(tab.id);
-  setTimeout(loadSleep, 500);
+  await Promise.allSettled(tabs.filter(item => item.discarded).map(tab => chrome.tabs.reload(tab.id)));
+  await new Promise(r => setTimeout(r, 100));
+  await loadSleep();
 });
 
 let allHistory = [];
@@ -622,9 +624,11 @@ async function loadHistory() {
 
 function renderHistory(items) {
   const list = document.getElementById('historyList');
-  list.innerHTML = items.map(item => `
+  list.innerHTML = items.map(item => {
+    const safeFavicon = /^https:\/\/www\.google\.com\/s2\/favicons\?/.test(item.favicon) ? item.favicon : favicon(item.url);
+    return `
     <li class="item-row">
-      <img src="${item.favicon || favicon(item.url)}" onerror="this.style.display='none'">
+      <img src="${safeFavicon}" onerror="this.style.display='none'">
       <div class="item-main">
         <div class="item-title-row">
           <span class="plain-title">${escHtml(item.title || item.url)}</span>
@@ -635,8 +639,8 @@ function renderHistory(items) {
           <span class="meta-pill">关闭于 ${timeAgo(item.closedAt)}</span>
         </div>
       </div>
-    </li>
-  `).join('') || '<li class="empty">暂无关闭记录</li>';
+    </li>`;
+  }).join('') || '<li class="empty">暂无关闭记录</li>';
 
   list.querySelectorAll('[data-restore-url]').forEach(btn => {
     btn.addEventListener('click', () => send('RESTORE_TAB', { url: btn.dataset.restoreUrl }));
