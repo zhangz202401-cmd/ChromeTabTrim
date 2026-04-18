@@ -571,10 +571,10 @@ h1 {
 
 .field select {
   width: 100%;
-  padding: 14px 16px;
+  padding: 14px 40px 14px 16px;
   border-radius: 18px;
   border: 1px solid rgba(var(--accent-rgb), 0.14);
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.78) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237c9898' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
   font-size: 14px;
   color: var(--text);
   outline: none;
@@ -605,8 +605,8 @@ h1 {
 }
 
 .settings-footer {
-  grid-column: 1 / -1;
   padding: 18px 24px;
+  margin-top: 18px;
 }
 
 .save-msg {
