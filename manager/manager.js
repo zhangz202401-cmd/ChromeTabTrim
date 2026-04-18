@@ -40,7 +40,8 @@ function durationText(ts) {
   return `${months} 个月`;
 }
 
-function favicon(url) {
+function favicon(url, favIconUrl) {
+  if (favIconUrl && favIconUrl.startsWith('http')) return favIconUrl;
   try { new URL(url); } catch { return ''; }
   return `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(url)}&size=16`;
 }
@@ -144,7 +145,7 @@ function buildTabRow(tab, options = {}) {
   return `
     <li class="item-row ${tab.discarded ? 'discarded' : ''}">
       ${selectable}
-      <img src="${favicon(tab.url || '')}" onerror="this.style.display='none'">
+      <img src="${favicon(tab.url || '', tab.favIconUrl)}" onerror="this.style.display='none'">
       <div class="item-main">
         <div class="item-title-row">
           <a class="jump-link" data-id="${tab.id}" data-wid="${tab.windowId}" title="${escAttr(tab.url)}">${escHtml(tab.title || tab.url || '(无标题)')}</a>
@@ -160,7 +161,7 @@ function buildDomainCard(group) {
   const removableCount = Math.max(0, group.tabs.length - 1);
   const rows = group.tabs.map(tab => `
     <li class="domain-tab-row ${tab.discarded ? 'discarded' : ''}">
-      <img src="${favicon(tab.url || '')}" onerror="this.style.display='none'">
+      <img src="${favicon(tab.url || '', tab.favIconUrl)}" onerror="this.style.display='none'">
       <div class="domain-tab-main">
         <div class="domain-tab-head">
           <a class="jump-link" data-id="${tab.id}" data-wid="${tab.windowId}" title="${escAttr(tab.url)}">${escHtml(tab.title || tab.url || '(无标题)')}</a>
@@ -200,7 +201,7 @@ function buildUrlDuplicateCard(group) {
   const removableCount = Math.max(0, group.tabs.length - 1);
   const rows = group.tabs.map(tab => `
     <li class="domain-tab-row ${tab.discarded ? 'discarded' : ''}">
-      <img src="${favicon(tab.url || '')}" onerror="this.style.display='none'">
+      <img src="${favicon(tab.url || '', tab.favIconUrl)}" onerror="this.style.display='none'">
       <div class="domain-tab-main">
         <div class="domain-tab-head">
           <a class="jump-link" data-id="${tab.id}" data-wid="${tab.windowId}" title="${escAttr(tab.url)}">${escHtml(tab.title || tab.url || '(无标题)')}</a>
@@ -594,7 +595,7 @@ async function loadSleep() {
   const list = document.getElementById('sleepList');
   list.innerHTML = filteredSleeping.map(tab => `
     <li class="item-row">
-      <img src="${favicon(tab.url || '')}" onerror="this.style.display='none'">
+      <img src="${favicon(tab.url || '', tab.favIconUrl)}" onerror="this.style.display='none'">
       <div class="item-main">
         <div class="item-title-row">
           <a class="jump-link" data-id="${tab.id}" data-wid="${tab.windowId}" title="${escAttr(tab.url)}">${escHtml(tab.title || tab.url || '(无标题)')}</a>
