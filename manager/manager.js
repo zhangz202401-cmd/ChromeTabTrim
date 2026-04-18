@@ -4,10 +4,11 @@ async function send(type, data = {}, retries = 3) {
       const res = await chrome.runtime.sendMessage({ type, ...data });
       if (res !== undefined) return res;
     } catch (e) {
-      if (i === retries) throw e;
+      if (i === retries) return null;
     }
     await new Promise(r => setTimeout(r, 300 * (i + 1)));
   }
+  return null;
 }
 
 function memStr(bytes) {
@@ -343,10 +344,10 @@ function renderDomainDupPanel() {
   panel.querySelector('#confirmDomainDup').addEventListener('click', async () => {
     const domains = [...selectedDomainGroups];
     if (!domains.length) return;
-    const before = await send('GET_ALL_TABS');
+    const before = (await send('GET_ALL_TABS')) || [];
     const memBefore = before.reduce((s, t) => s + (t.memory || 0), 0);
-    const res = await send('CLOSE_DOMAIN_DUPS', { domains });
-    const after = await send('GET_ALL_TABS');
+    const res = (await send('CLOSE_DOMAIN_DUPS', { domains })) || { closed: 0 };
+    const after = (await send('GET_ALL_TABS')) || [];
     const saved = memBefore - after.reduce((s, t) => s + (t.memory || 0), 0);
     showToast(`已关闭 ${res.closed} 个重复标签页${saved > 0 ? `，释放约 ${memStr(saved)}` : ''}`);
     await loadOverview();
@@ -374,7 +375,7 @@ function renderDomainDupPanel() {
 }
 
 async function openDomainDupPanel(preserveSelection = false) {
-  const groups = await send('GET_DOMAIN_DUPLICATES');
+  const groups = (await send('GET_DOMAIN_DUPLICATES')) || [];
   const panel = document.getElementById('domainDupPanel');
   hideDuplicatePanel('urlDupPanel', () => {
     selectedUrlGroups.clear();
@@ -483,10 +484,10 @@ function renderUrlDupPanel() {
   panel.querySelector('#confirmUrlDup').addEventListener('click', async () => {
     const urls = [...selectedUrlGroups];
     if (!urls.length) return;
-    const before = await send('GET_ALL_TABS');
+    const before = (await send('GET_ALL_TABS')) || [];
     const memBefore = before.reduce((s, t) => s + (t.memory || 0), 0);
-    const res = await send('CLOSE_DUPLICATES', { urls });
-    const after = await send('GET_ALL_TABS');
+    const res = (await send('CLOSE_DUPLICATES', { urls })) || { closed: 0 };
+    const after = (await send('GET_ALL_TABS')) || [];
     const saved = memBefore - after.reduce((s, t) => s + (t.memory || 0), 0);
     showToast(`已关闭 ${res.closed} 个重复标签页${saved > 0 ? `，释放约 ${memStr(saved)}` : ''}`);
     await loadOverview();
@@ -514,7 +515,7 @@ function renderUrlDupPanel() {
 }
 
 async function openUrlDupPanel(preserveSelection = false) {
-  const groups = await send('GET_URL_DUPLICATES');
+  const groups = (await send('GET_URL_DUPLICATES')) || [];
   const panel = document.getElementById('urlDupPanel');
   hideDuplicatePanel('domainDupPanel', () => {
     selectedDomainGroups.clear();
@@ -638,7 +639,7 @@ async function loadHistory() {
 function renderHistory(items) {
   const list = document.getElementById('historyList');
   list.innerHTML = items.map(item => {
-    const safeFavicon = /^https:\/\/www\.google\.com\/s2\/favicons\?/.test(item.favicon) ? item.favicon : favicon(item.url);
+    const safeFavicon = favicon(item.url, item.favicon?.startsWith('http') ? item.favicon : '');
     return `
     <li class="item-row">
       <img src="${safeFavicon}" onerror="this.style.display='none'">
