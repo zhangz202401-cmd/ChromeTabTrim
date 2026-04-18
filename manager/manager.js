@@ -41,7 +41,8 @@ function durationText(ts) {
 }
 
 function favicon(url) {
-  try { return `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}&sz=16`; } catch { return ''; }
+  try { new URL(url); } catch { return ''; }
+  return `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(url)}&size=16`;
 }
 
 function escHtml(value) {
@@ -54,7 +55,7 @@ function escHtml(value) {
 }
 
 function escAttr(value) {
-  return escHtml(value).replace(/"/g, '&quot;');
+  return escHtml(value);
 }
 
 const panels = { overview: loadOverview, sleep: loadSleep, history: loadHistory, settings: loadSettings };
@@ -553,7 +554,17 @@ async function loadOverview() {
     (totalMem ? ` <span class="dot"></span> JS堆内存 <b>${memStr(totalMem)}</b>` : '');
 
   const list = document.getElementById('tabList');
-  list.innerHTML = filteredTabs.map(tab => buildTabRow(tab, { selectable: true })).join('') || '<li class="empty">没有匹配的标签页</li>';
+  const byWindow = filteredTabs.reduce((acc, tab) => {
+    (acc[tab.windowId] = acc[tab.windowId] || []).push(tab);
+    return acc;
+  }, {});
+  const windowIds = Object.keys(byWindow);
+  list.innerHTML = windowIds.length === 0
+    ? '<li class="empty">没有匹配的标签页</li>'
+    : windowIds.map((wid, i) => `
+        <li class="window-group-header">窗口 ${i + 1}（${byWindow[wid].length} 个标签页）</li>
+        ${byWindow[wid].map(tab => buildTabRow(tab, { selectable: true })).join('')}
+      `).join('');
 
   bindTabSelection(list);
   bindJumpLinks(list);
@@ -609,7 +620,7 @@ async function loadSleep() {
 
 document.getElementById('wakeAll').addEventListener('click', async () => {
   const tabs = await send('GET_ALL_TABS');
-  for (const tab of tabs.filter(item => item.discarded)) chrome.tabs.reload(tab.id);
+  for (const tab of tabs.filter(item => item.discarded)) chrome.tabs.update(tab.id, { active: true });
   setTimeout(loadSleep, 500);
 });
 
@@ -656,6 +667,15 @@ document.getElementById('overviewSearch').addEventListener('input', () => {
 
 document.getElementById('sleepSearch').addEventListener('input', () => {
   loadSleep();
+});
+
+document.getElementById('exportHistory').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(allHistory, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `tabtrim-history-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
 });
 
 document.getElementById('clearHistory').addEventListener('click', async () => {

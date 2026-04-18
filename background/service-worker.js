@@ -232,11 +232,13 @@ chrome.tabs.onRemoved.addListener(async (tabId, { isWindowClosing }) => {
   const { tabActivity = {}, closedHistory = [] } = await chrome.storage.local.get(['tabActivity', 'closedHistory']);
   const activity = tabActivity[tabId];
   if (activity?.url && !activity.url.startsWith('chrome://')) {
+    let faviconUrl = '';
+    try { faviconUrl = `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(activity.url)}&size=16`; } catch {}
     closedHistory.unshift({
       url: activity.url,
       title: activity.title || '',
       closedAt: Date.now(),
-      favicon: `https://www.google.com/s2/favicons?domain=${new URL(activity.url).hostname}`
+      favicon: faviconUrl
     });
     if (closedHistory.length > MAX_HISTORY) closedHistory.pop();
   }

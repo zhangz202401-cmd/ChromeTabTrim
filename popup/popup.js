@@ -1,5 +1,12 @@
-async function send(type, data = {}) {
-  return chrome.runtime.sendMessage({ type, ...data });
+async function send(type, data = {}, retries = 2) {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      return await chrome.runtime.sendMessage({ type, ...data });
+    } catch (e) {
+      if (i === retries) throw e;
+      await new Promise(r => setTimeout(r, 200));
+    }
+  }
 }
 
 function escHtml(value) {
