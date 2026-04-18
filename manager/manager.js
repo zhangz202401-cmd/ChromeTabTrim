@@ -631,7 +631,7 @@ document.getElementById('wakeAll').addEventListener('click', async () => {
 let allHistory = [];
 
 async function loadHistory() {
-  allHistory = await send('GET_HISTORY');
+  allHistory = (await send('GET_HISTORY')) || [];
   renderHistory(allHistory);
 }
 
@@ -691,7 +691,7 @@ document.getElementById('clearHistory').addEventListener('click', async () => {
 });
 
 async function loadSettings() {
-  const settings = await send('GET_SETTINGS');
+  const settings = (await send('GET_SETTINGS')) || {};
   document.getElementById('sleepThreshold').value = settings.sleepThresholdMinutes;
   document.getElementById('sleepEnabled').checked = settings.sleepEnabled;
   document.getElementById('autoDedupEnabled').checked = settings.autoDedupEnabled;
