@@ -1,11 +1,12 @@
-async function send(type, data = {}, retries = 2) {
+async function send(type, data = {}, retries = 3) {
   for (let i = 0; i <= retries; i++) {
     try {
-      return await chrome.runtime.sendMessage({ type, ...data });
+      const res = await chrome.runtime.sendMessage({ type, ...data });
+      if (res !== undefined) return res;
     } catch (e) {
       if (i === retries) throw e;
-      await new Promise(r => setTimeout(r, 200));
     }
+    await new Promise(r => setTimeout(r, 300 * (i + 1)));
   }
 }
 
