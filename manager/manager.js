@@ -1,4 +1,4 @@
-async function send(type, data = {}, retries = 3) {
+async function send(type, data = {}, retries = 5) {
   for (let i = 0; i <= retries; i++) {
     try {
       const res = await chrome.runtime.sendMessage({ type, ...data });
@@ -6,9 +6,19 @@ async function send(type, data = {}, retries = 3) {
     } catch (e) {
       if (i === retries) return null;
     }
-    await new Promise(r => setTimeout(r, 300 * (i + 1)));
+    await new Promise(r => setTimeout(r, 200 + 200 * i));
   }
   return null;
+}
+
+async function waitForServiceWorker() {
+  for (let i = 0; i < 10; i++) {
+    try {
+      const res = await chrome.runtime.sendMessage({ type: 'GET_STATS' });
+      if (res !== undefined) return;
+    } catch {}
+    await new Promise(r => setTimeout(r, 300));
+  }
 }
 
 function memStr(bytes) {
@@ -722,4 +732,4 @@ function showToast(message) {
   setTimeout(() => toast.classList.remove('show'), 2200);
 }
 
-loadOverview();
+waitForServiceWorker().then(() => loadOverview());
