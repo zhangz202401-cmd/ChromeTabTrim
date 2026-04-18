@@ -32,9 +32,14 @@ async function init() {
   btn.disabled = stats.duplicateCount === 0;
   btn.onclick = async () => {
     btn.disabled = true;
-    const res = await send('CLOSE_DUPLICATES');
-    btn.textContent = res.closed ? `已关闭 ${res.closed} 个重复标签页` : '没有发现重复标签页';
-    setTimeout(init, 900);
+    try {
+      const res = await send('CLOSE_DUPLICATES');
+      btn.textContent = res?.closed ? `已关闭 ${res.closed} 个重复标签页` : '没有发现重复标签页';
+      setTimeout(init, 900);
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = '操作失败';
+    }
   };
 
   const list = document.getElementById('historyList');
@@ -43,13 +48,15 @@ async function init() {
     return;
   }
 
-  list.innerHTML = stats.recentHistory.map(item => `
+  list.innerHTML = stats.recentHistory.map(item => {
+    const safeFavicon = /^https:\/\/www\.google\.com\/s2\/favicons\?/.test(item.favicon) ? item.favicon : '';
+    return `
     <li data-url="${escAttr(item.url)}">
-      <img src="${item.favicon}" onerror="this.style.display='none'">
+      ${safeFavicon ? `<img src="${safeFavicon}" onerror="this.style.display='none'">` : ''}
       <span class="history-title" title="${escAttr(item.url)}">${escHtml(item.title || item.url)}</span>
       <span class="history-action">恢复</span>
-    </li>
-  `).join('');
+    </li>`;
+  }).join('');
 
   list.querySelectorAll('li[data-url]').forEach(item => {
     item.addEventListener('click', () => send('RESTORE_TAB', { url: item.dataset.url }));
