@@ -545,7 +545,7 @@ async function openUrlDupPanel(preserveSelection = false) {
 async function loadOverview() {
   selectedIds.clear();
   updateCloseSelected();
-  const tabs = await send('GET_ALL_TABS');
+  const tabs = (await send('GET_ALL_TABS')) || [];
   const sleeping = tabs.filter(tab => tab.discarded).length;
   const totalMem = tabs.reduce((s, t) => s + (t.memory || 0), 0);
   const query = normalizeQuery(document.getElementById('overviewSearch')?.value);
@@ -586,7 +586,7 @@ document.getElementById('closeDomainDupsBtn').addEventListener('click', async ()
 });
 
 async function loadSleep() {
-  const tabs = await send('GET_ALL_TABS');
+  const tabs = (await send('GET_ALL_TABS')) || [];
   const sleeping = tabs.filter(tab => tab.discarded);
   const query = normalizeQuery(document.getElementById('sleepSearch')?.value);
   const filteredSleeping = sleeping.filter(tab => matchesTabQuery(tab, query));
@@ -621,7 +621,7 @@ async function loadSleep() {
 }
 
 document.getElementById('wakeAll').addEventListener('click', async () => {
-  const tabs = await send('GET_ALL_TABS');
+  const tabs = (await send('GET_ALL_TABS')) || [];
   await Promise.allSettled(tabs.filter(item => item.discarded).map(tab => chrome.tabs.reload(tab.id)));
   await new Promise(r => setTimeout(r, 100));
   await loadSleep();
