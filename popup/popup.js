@@ -22,14 +22,36 @@ function escAttr(value) {
   return escHtml(value);
 }
 
+function favicon(url, favIconUrl) {
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+      return `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(parsed.href)}&size=16`;
+    }
+  } catch {}
+
+  if (typeof favIconUrl === 'string' && (favIconUrl.startsWith('data:') || favIconUrl.startsWith('chrome-extension://'))) {
+    return favIconUrl;
+  }
+
+  return '';
+}
+
 async function init() {
-  const stats = await send('GET_STATS');
-  document.getElementById('totalCount').textContent = stats.total;
-  document.getElementById('dupCount').textContent = stats.duplicateCount;
-  document.getElementById('sleepCount').textContent = stats.sleepCount;
+  const stats = await send('GET_STATS').catch(() => null);
+  const safeStats = {
+    total: 0,
+    duplicateCount: 0,
+    sleepCount: 0,
+    recentHistory: [],
+    ...stats
+  };
+  document.getElementById('totalCount').textContent = safeStats.total;
+  document.getElementById('dupCount').textContent = safeStats.duplicateCount;
+  document.getElementById('sleepCount').textContent = safeStats.sleepCount;
 
   const btn = document.getElementById('closeDups');
-  btn.disabled = stats.duplicateCount === 0;
+  btn.disabled = safeStats.duplicateCount === 0;
   btn.onclick = async () => {
     btn.disabled = true;
     try {
@@ -43,13 +65,13 @@ async function init() {
   };
 
   const list = document.getElementById('historyList');
-  if (!stats.recentHistory.length) {
+  if (!safeStats.recentHistory.length) {
     list.innerHTML = '<li class="empty">暂无关闭记录</li>';
     return;
   }
 
-  list.innerHTML = stats.recentHistory.map(item => {
-    const safeFavicon = /^https:\/\/www\.google\.com\/s2\/favicons\?/.test(item.favicon) ? item.favicon : '';
+  list.innerHTML = safeStats.recentHistory.map(item => {
+    const safeFavicon = favicon(item.url, item.favicon);
     return `
     <li data-url="${escAttr(item.url)}">
       ${safeFavicon ? `<img src="${safeFavicon}" onerror="this.style.display='none'">` : ''}

@@ -25,6 +25,14 @@ function withDefaultSettings(settings = {}) {
   return { ...DEFAULTS, ...settings };
 }
 
+function isManageableUrl(url) {
+  return typeof url === 'string' && /^https?:\/\//.test(url);
+}
+
+function isManageableTab(tab) {
+  return Boolean(tab?.id && isManageableUrl(tab.url));
+}
+
 async function syncAlarms(settingsInput) {
   const settings = withDefaultSettings(settingsInput);
   chrome.alarms.create('sleepCheck', { periodInMinutes: 1 });
@@ -110,7 +118,7 @@ async function getDuplicates() {
   const tabs = await chrome.tabs.query({});
   const urlMap = {};
   for (const tab of tabs) {
-    if (!tab.url || tab.url.startsWith('chrome://')) continue;
+    if (!isManageableTab(tab)) continue;
     if (!urlMap[tab.url]) urlMap[tab.url] = [];
     urlMap[tab.url].push(tab);
   }
@@ -145,7 +153,7 @@ async function getDomainDuplicates() {
   const domainMap = {};
 
   for (const tab of tabs) {
-    if (!tab.url || tab.url.startsWith('chrome://')) continue;
+    if (!isManageableTab(tab)) continue;
     try {
       const rootDomain = getRootDomain(new URL(tab.url).hostname);
       if (!domainMap[rootDomain]) domainMap[rootDomain] = [];
@@ -167,6 +175,60 @@ async function injectMemoryScript(tabId) {
   } catch (e) {
     console.warn('injectMemoryScript failed', tabId, e);
   }
+}
+
+function canProbeTabMemory(tab) {
+  return isManageableTab(tab);
+}
+
+async function probeTabMemory(tabId) {
+  try {
+    const [injectionResult] = await chrome.scripting.executeScript({
+      target: { tabId },
+      world: 'MAIN',
+      func: () => {
+        const mem = globalThis.performance?.memory;
+        if (!mem || typeof mem.usedJSHeapSize !== 'number') return null;
+        return {
+          usedJSHeapSize: mem.usedJSHeapSize,
+          totalJSHeapSize: typeof mem.totalJSHeapSize === 'number' ? mem.totalJSHeapSize : 0,
+          ts: Date.now()
+        };
+      }
+    });
+    return injectionResult?.result || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+async function refreshTabMemory(tabs) {
+  const { tabMemory = {} } = await chrome.storage.local.get('tabMemory');
+  const openIds = new Set(tabs.map(tab => String(tab.id)));
+  let changed = false;
+
+  await Promise.allSettled(tabs.filter(canProbeTabMemory).map(async tab => {
+    const memory = await probeTabMemory(tab.id);
+    if (!memory) return;
+    const previous = tabMemory[tab.id];
+    if (
+      previous?.usedJSHeapSize !== memory.usedJSHeapSize ||
+      previous?.totalJSHeapSize !== memory.totalJSHeapSize
+    ) {
+      tabMemory[tab.id] = memory;
+      changed = true;
+    }
+  }));
+
+  for (const tabId of Object.keys(tabMemory)) {
+    if (!openIds.has(tabId)) {
+      delete tabMemory[tabId];
+      changed = true;
+    }
+  }
+
+  if (changed) await chrome.storage.local.set({ tabMemory });
+  return tabMemory;
 }
 
 async function initialize() {
@@ -192,6 +254,7 @@ chrome.alarms.onAlarm.addListener(async alarm => {
 
     let staleCount = 0;
     for (const tab of tabs) {
+      if (!isManageableTab(tab)) continue;
       if (tab.active || tab.discarded || tab.pinned) continue;
       const activity = tabActivity?.[tab.id];
       const lastActive = activity?.lastActiveAt || tab.lastAccessed || 0;
@@ -228,7 +291,7 @@ chrome.tabs.onRemoved.addListener(async (tabId, { isWindowClosing }) => {
   if (isWindowClosing) return;
   const { tabActivity = {}, closedHistory = [] } = await chrome.storage.local.get(['tabActivity', 'closedHistory']);
   const activity = tabActivity[tabId];
-  if (activity?.url && !activity.url.startsWith('chrome://')) {
+  if (isManageableUrl(activity?.url)) {
     let faviconUrl = '';
     try { faviconUrl = `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(activity.url)}&size=16`; } catch {}
     closedHistory.unshift({
@@ -245,7 +308,8 @@ chrome.tabs.onRemoved.addListener(async (tabId, { isWindowClosing }) => {
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   // 只允许内容脚本发送 TAB_MEMORY，其他特权消息必须来自扩展页面
-  if (msg.type !== 'TAB_MEMORY' && sender.tab) return false;
+  const isExtensionPage = typeof sender.url === 'string' && sender.url.startsWith(chrome.runtime.getURL(''));
+  if (msg.type !== 'TAB_MEMORY' && sender.tab && !isExtensionPage) return false;
 
   // content script 上报内存数据，fire-and-forget，不需要响应
   if (msg.type === 'TAB_MEMORY' && sender.tab?.id) {
@@ -353,7 +417,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg.type === 'GET_ALL_TABS') {
       const tabActivity = await syncOpenTabsMetadata();
       const tabs = await chrome.tabs.query({});
-      const { tabMemory = {} } = await chrome.storage.local.get('tabMemory');
+      const tabMemory = await refreshTabMemory(tabs);
       sendResponse(tabs.map(tab => ({
         ...tab,
         lastActiveAt: tabActivity[tab.id]?.lastActiveAt || 0,

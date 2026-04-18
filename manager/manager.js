@@ -53,9 +53,18 @@ function durationText(ts) {
 }
 
 function favicon(url, favIconUrl) {
-  if (favIconUrl && favIconUrl.startsWith('http')) return favIconUrl;
-  try { new URL(url); } catch { return ''; }
-  return `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(url)}&size=16`;
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+      return `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(parsed.href)}&size=16`;
+    }
+  } catch {}
+
+  if (typeof favIconUrl === 'string' && (favIconUrl.startsWith('data:') || favIconUrl.startsWith('chrome-extension://'))) {
+    return favIconUrl;
+  }
+
+  return '';
 }
 
 function escHtml(value) {
@@ -692,7 +701,7 @@ document.getElementById('exportHistory').addEventListener('click', () => {
   a.href = URL.createObjectURL(blob);
   a.download = `tabtrim-history-${new Date().toISOString().slice(0, 10)}.json`;
   a.click();
-  URL.revokeObjectURL(a.href);
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 });
 
 document.getElementById('clearHistory').addEventListener('click', async () => {
